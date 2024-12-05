@@ -12,8 +12,11 @@ jobs:
         with:
           dotnet-version: '8.x'
       - name: Install dependencies
+        working-directory: ./src
         run: dotnet restore
       - name: Build
+        working-directory: ./src
         run: dotnet build
       - name: Test with the dotnet CLI
+        working-directory: ./src
         run: dotnet test
