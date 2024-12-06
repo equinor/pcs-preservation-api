@@ -5,9 +5,9 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/
+    # defaults:
+    #   run:
+    #     working-directory: src/
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET 8.x
@@ -22,4 +22,4 @@ jobs:
               --store-password-in-clear-text
       - run: ls -l
       - name: Run tests
-        run: dotnet test
+        run: dotnet test src/Equinor.ProCoSys.Preservation.sln
