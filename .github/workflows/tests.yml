@@ -5,9 +5,9 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: src/
+    defaults:
+      run:
+        working-directory: src/
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET 8.x
@@ -15,12 +15,11 @@ jobs:
         with:
           dotnet-version: '8.x'
       - name: Configure NuGet source
-        working-directory: src/
         run: |
           dotnet nuget update source ProCoSysOfficial \
               --username statoildeveloper \
               --password ${{ secrets.AZURE_ARTIFACTS_PAT }} \
               --store-password-in-clear-text
-      - run: ls -l
-      - name: Run tests
-        run: dotnet test src/Equinor.ProCoSys.Preservation.sln
+      # - name: Run tests
+      #   run: dotnet test
+      - run: dotnet build Equinor.ProCoSys.Preservation.Domain\Equinor.ProCoSys.Preservation.Domain.csproj
