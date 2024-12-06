@@ -4,12 +4,16 @@ on: [push]
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./src
     steps:
       - uses: actions/checkout@v4
+      - name: Setup dotnet 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
       - name: Configure NuGet source
         run: |
           dotnet nuget add source --name ProCoSysOfficial \
