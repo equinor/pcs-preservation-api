@@ -15,6 +15,7 @@ jobs:
         with:
           dotnet-version: '8.x'
       - name: Configure NuGet source
+        working-directory: src/
         run: |
           dotnet nuget update source ProCoSysOfficial \
               --username statoildeveloper \
