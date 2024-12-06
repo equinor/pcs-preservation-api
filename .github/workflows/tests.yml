@@ -20,9 +20,7 @@ jobs:
               --username statoildeveloper \
               --password ${{ secrets.AZURE_ARTIFACTS_PAT }} \
               --store-password-in-clear-text
+      - name: Run tests
+        run: dotnet test
 
-      # - name: Run tests
-      #   run: dotnet test
-      - run: ls -l
-      - run: ls -l Equinor.ProCoSys.Preservation.Domain
-      - run: dotnet build Equinor.ProCoSys.Preservation.Domain/Equinor.ProCoSys.Preservation.Domain.csproj
+      # - run: dotnet build Equinor.ProCoSys.Preservation.Domain/Equinor.ProCoSys.Preservation.Domain.csproj
