@@ -16,7 +16,7 @@ jobs:
           dotnet-version: '8.0.x'
       - name: Configure NuGet source
         run: |
-          dotnet nuget add source --name ProCoSysOfficial \
+          dotnet nuget update source --name ProCoSysOfficial \
               --username statoildeveloper \
               --password ${{ secrets.AZURE_ARTIFACTS_PAT }} \
               --store-password-in-clear-text \
