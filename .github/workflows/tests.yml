@@ -23,6 +23,6 @@ jobs:
               https://statoildeveloper.pkgs.visualstudio.com/_packaging/ProCoSysOfficial/nuget/v3/index.json
       - name: Run tests
         working-directory: src/
-        run: dotnet test src/Equinor.ProCoSys.Preservation.sln
+        run: dotnet test
 
       # - run: dotnet build Equinor.ProCoSys.Preservation.Domain/Equinor.ProCoSys.Preservation.Domain.csproj
