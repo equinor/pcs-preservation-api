@@ -20,9 +20,7 @@ jobs:
               --username statoildeveloper \
               --password ${{ secrets.AZURE_ARTIFACTS_PAT }} \
               --store-password-in-clear-text
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build
       - name: Run tests
-        run: dotnet test
+        run: |
+          cd src/
+          dotnet test
