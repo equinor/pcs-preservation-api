@@ -22,7 +22,8 @@ jobs:
               --store-password-in-clear-text \
               https://statoildeveloper.pkgs.visualstudio.com/_packaging/ProCoSysOfficial/nuget/v3/index.json
       - name: Run tests
-        working-directory: src/
-        run: dotnet test
+        run: |
+          cd src/
+          dotnet test ./Equinor.ProCoSys.Preservation.sln
 
       # - run: dotnet build Equinor.ProCoSys.Preservation.Domain/Equinor.ProCoSys.Preservation.Domain.csproj
