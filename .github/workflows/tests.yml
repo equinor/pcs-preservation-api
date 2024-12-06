@@ -10,4 +10,12 @@ jobs:
         working-directory: ./src
     steps:
       - uses: actions/checkout@v4
-      - run: dotnet test
+      - name: Configure NuGet source
+        run: |
+          dotnet nuget add source --name ProCoSysOfficial \
+              --username statoildeveloper \
+              --password ${{ secrets.AZURE_ARTIFACTS_PAT }} \
+              --store-password-in-clear-text \
+              https://statoildeveloper.pkgs.visualstudio.com/_packaging/ProCoSysOfficial/nuget/v3/index.json
+      - name: Run tests
+        run: dotnet test
