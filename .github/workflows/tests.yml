@@ -5,7 +5,11 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src
     steps:
+      - run: ls -l
       - uses: actions/checkout@v4
       - name: Setup .NET 8.x
         uses: actions/setup-dotnet@v4
@@ -13,12 +17,9 @@ jobs:
           dotnet-version: '8.x'
       - name: Configure NuGet source
         run: |
-          cd src/
           dotnet nuget update source ProCoSysOfficial \
               --username statoildeveloper \
               --password ${{ secrets.AZURE_ARTIFACTS_PAT }} \
               --store-password-in-clear-text
       - name: Run tests
-        run: |
-          cd src/
-          dotnet test
+        run: dotnet test
