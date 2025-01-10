@@ -5,8 +5,6 @@ metadata:
 spec:
   environments:
   - name: dev
-  - name: test
-  - name: prod
 
   components:
   # ---------
@@ -40,42 +38,6 @@ spec:
         limits:
           memory: '256Mi'
           cpu: '250m'
-    # Test environment
-    - environment: test
-      identity:
-        azure:
-          clientId: f23bcde6-d6a4-42d5-94fa-96b184968cf7
-      variables:
-        ASPNETCORE_ENVIRONMENT: 'Test'
-        UseAzureAppConfiguration: 'true'
-        LEADERELECTOR_SERVICE: http://leader-elector:3003
-      monitoring: false
-      replicas: 2
-      resources:
-        requests:
-          memory: '256Mi'
-          cpu: '100m'
-        limits:
-          memory: '256Mi'
-          cpu: '250m'
-    # Prod environment
-    - environment: prod
-      identity:
-        azure:
-          clientId: 1eb50c54-e897-4216-93d0-6ca86b0cf681
-      variables:
-        ASPNETCORE_ENVIRONMENT: 'Prod'
-        UseAzureAppConfiguration: 'true'
-        LEADERELECTOR_SERVICE: http://leader-elector:3003
-      monitoring: false
-      replicas: 3
-      resources:
-        requests:
-          memory: '750Mi'
-          cpu: '200m'
-        limits:
-          memory: '750Mi'
-          cpu: '500m'
 
   #--------------------
   # LeaderElector 
@@ -100,32 +62,7 @@ spec:
         limits:
           memory: '128Mi'
           cpu: '100m'
-    # Test environment
-    - environment: test
-      variables:
-        LEASE_TIME: 5
-      monitoring: false
-      replicas: 1
-      resources:
-        requests:
-          memory: '128Mi'
-          cpu: '100m'
-        limits:
-          memory: '128Mi'
-          cpu: '100m'
-    # Prod environment
-    - environment: prod
-      variables:
-         LEASE_TIME: 5
-      replicas: 1
-      resources:
-        requests:
-          memory: '128Mi'
-          cpu: '100m'
-        limits:
-          memory: '128Mi'
-          cpu: '100m'
-      monitoring: false
+
   #--------------------------------
   # External docker image registry
   #--------------------------------
