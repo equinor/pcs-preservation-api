@@ -1,7 +1,7 @@
 apiVersion: radix.equinor.com/v1
 kind: RadixApplication
 metadata:
-  name: procosys-preservation-api
+  name: preservation-identity-test
 spec:
   environments:
   - name: dev
@@ -61,8 +61,7 @@ spec:
           cpu: '100m'
         limits:
           memory: '128Mi'
-          cpu: '100m'
-          
+          cpu: '100m'  
 
   #--------------------------------
   # External docker image registry
