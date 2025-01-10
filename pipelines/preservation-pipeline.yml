@@ -21,7 +21,7 @@ variables:
    value: 'preservation/api'
 
  - name: 'versionNumber'
-   value: '1.000.0.'
+   value: '0.000.0.'
 
  - name: NUGET.PLUGIN.HANDSHAKE.TIMEOUT.IN.SECONDS
    value: 40
@@ -83,7 +83,7 @@ stages:
      parameters:
        deploymentName: 'docker_build_and_push_master_only'
        dependsOn: ''
-       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
+       condition: succeeded()
        env: 'pcs-${{ variables.envName }}'
        envGroup: '${{ variables.envGroupName }}'
        buildCommand: buildAndPush
@@ -106,7 +106,7 @@ stages:
 - stage: DeployDev
   displayName: 'Deploy to dev'
   dependsOn: 'Build' 
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
+  condition: succeeded()
   variables:
     envName: 'dev'
     envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
@@ -140,86 +140,3 @@ stages:
                 parameters:
                   imageTagNameBackend: '${{ variables.versionNumber }}$(Build.BuildId)'
                   imageTagNameLeaderElector: ${{ variables.leaderElectorDockerImageTagName }}
-
-# Deploy stage - test
-- stage: DeployTest
-  displayName: 'Deploy to test'
-  dependsOn: 'DeployDev'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
-  variables:
-    envName: 'test'
-    envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
-    serviceConnection: '${{ variables.nonProdServiceConnection }}'
-    radixPromoteFromEnv: 'dev'
-    radixJobName: $[ stageDependencies.DeployDev.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
-
-  jobs:
-    - deployment: Deploy
-      displayName: Migrate DB & promote
-      environment: '${{ variables.envGroupName }}'
-      pool:
-        vmImage: 'windows-latest'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              # Run Migration Script (Predeploy)
-              - template: templates/execute-db-migration.yml
-                parameters:
-                  dependsOn: ''      
-                  deploymentName: 'run_migration_script'
-                  envGroup: '${{ variables.envGroupName }}'
-                  serviceConnection: '${{ variables.serviceConnection }}'
-                  kvName: '${{ variables.commonKeyVault }}'
-                  kvRgName: 'pcs-common-rg'
-                  kvSecret: '${{ variables.sqlAdminUserName }}-${{ variables.envName }}'
-                  serverName: '${{ variables.sqlServerName }}.database.windows.net'
-                  databaseName: '${{ variables.sqlDatabaseName }}'      
-              # Promote to test
-              - template: templates/radix-promote-env.yml
-                parameters:
-                  fromEnvironment: $(radixPromoteFromEnv)
-                  toEnvironment: $(envName)
-                  deploymentName: $(radixJobName)
-
-# Deploy stage - prod
-- stage: DeployProd
-  displayName: 'Deploy to prod'
-  dependsOn: 'DeployTest'
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
-  variables:
-    envName: 'prod'
-    envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
-    serviceConnection: '${{ variables.prodServiceConnection }}'
-    radixPromoteFromEnv: 'test'
-    radixJobName: $[ stageDependencies.DeployTest.Deploy.outputs['Deploy.RADIXJOB.radixJobName'] ] # This variable must have been set by previous step
-
-  jobs:
-    - deployment: Deploy
-      displayName: Migrate DB & promote
-      environment: '${{ variables.envGroupName }}'
-      pool:
-        vmImage: 'windows-latest'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              # Run Migration Script (Predeploy)
-              - template: templates/execute-db-migration.yml
-                parameters:
-                  dependsOn: ''      
-                  deploymentName: 'run_migration_script'
-                  envGroup: '${{ variables.envGroupName }}'
-                  serviceConnection: '${{ variables.serviceConnection }}'
-                  kvName: '${{ variables.commonKeyVault }}'
-                  kvRgName: 'pcs-common-rg'
-                  kvSecret: '${{ variables.sqlAdminUserName }}-${{ variables.envName }}'
-                  serverName: '${{ variables.sqlServerName }}.database.windows.net'
-                  databaseName: '${{ variables.sqlDatabaseName }}'      
-
-              # Promote to prod
-              - template: templates/radix-promote-env.yml
-                parameters:
-                  fromEnvironment: $(radixPromoteFromEnv)
-                  toEnvironment: $(envName)
-                  deploymentName: $(radixJobName)
