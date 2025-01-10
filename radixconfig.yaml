@@ -10,7 +10,6 @@ spec:
   # ---------
   # Backend
   #---------- 
-
   - name: backend
     image: procosys.azurecr.io/preservation/api:{imageTagName}
     ports:
