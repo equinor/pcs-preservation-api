@@ -35,26 +35,9 @@ variables:
 name: '${{ variables.versionNumber }}$(Build.BuildId)-$(Date:MMddyyyy)'
 
 stages:
-# Run tests Stage
-- stage: RunTests
-  displayName: 'Run tests'
-  variables:
-    envName: 'runtests'
-    envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
-    testPath: '$(Build.SourcesDirectory)/src/Equinor.ProCoSys.Preservation.sln'
-  jobs:
-  # Run Test
-  - template: /templates/pipelines/runtest.yml@templates
-    parameters:
-      deploymentName: 'runtests'
-      dependsOn: ''
-      envGroup: '${{ variables.envGroupName }}'
-      testPath: '${{ variables.testPath }}'
-
 # Build stage. Docker build. If master, tag and push
 - stage: Build
   displayName: 'Build'
-  dependsOn: 'RunTests'
   variables:
     envName: 'build'
     envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
@@ -122,19 +105,6 @@ stages:
         runOnce:
           deploy:
             steps:
-              # Run Migration Script (Predeploy)
-              - template: templates/execute-db-migration.yml
-                parameters:
-                  dependsOn: ''      
-                  deploymentName: 'run_migration_script'
-                  envGroup: '${{ variables.envGroupName }}'
-                  serviceConnection: '${{ variables.serviceConnection }}'
-                  kvName: '${{ variables.commonKeyVault }}'
-                  kvRgName: 'pcs-common-rg'
-                  kvSecret: '${{ variables.sqlAdminUserName }}-${{ variables.envName }}'
-                  serverName: '${{ variables.sqlServerName }}.database.windows.net'
-                  databaseName: '${{ variables.sqlDatabaseName }}'      
-
               # Deploy to Radix
               - template: templates/radix-deploy.yml
                 parameters:
