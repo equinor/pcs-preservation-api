@@ -77,14 +77,6 @@ stages:
        repository: '${{ variables.repositoryName }}'
        dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
-   # Create Migration Script
-   - template: /templates/pipelines/createsqlmigrate-preservation.yml@templates
-     parameters:
-       dependsOn: ''
-       deploymentName: 'create_migration_script'
-       envGroup: '${{ variables.envGroupName }}'
-       serviceConnection: '${{ variables.nonProdServiceConnection }}'
-
 # Dev deploy stage
 - stage: DeployDev
   displayName: 'Deploy to dev'
