@@ -11,7 +11,7 @@ spec:
   # Backend
   #---------- 
   - name: backend
-    image: sandbox1927.azurecr.io/preservation/api:{imageTagName}
+    image: procosys.azurecr.io/preservation/api:{imageTagName}
     ports:
     - name: http
       port: 5000
@@ -69,6 +69,3 @@ spec:
     procosys.azurecr.io:
       username: 9d3898e4-730f-4fb5-8ddf-a5de51537896
       email: arbje@equinor.com
-    sandbox1927.azurecr.io:
-      username: sandbox1927
-      email: rtd@equinor.com
