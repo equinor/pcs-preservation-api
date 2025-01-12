@@ -23,7 +23,7 @@ spec:
     - environment: dev
       identity:
         azure:
-          clientId: 67b2f053-30bf-4ffc-9206-ef57f631efcb
+          clientId: 7f865cc1-686e-4194-b84a-a4ca783aa7d7
       imageTagName: latest
       variables:
         ASPNETCORE_ENVIRONMENT: 'Development'
