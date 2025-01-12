@@ -41,7 +41,7 @@ stages:
   variables:
     envName: 'build'
     envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
-    dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
+    dockerRegistryServiceConnection: 'tmp - sandbox1927 - acr'
     dockerfilePath: '$(Build.SourcesDirectory)/src/Equinor.ProCoSys.Preservation.WebApi/Dockerfile'
 
   jobs:
@@ -59,7 +59,7 @@ stages:
        dockerfilePath: '${{ variables.dockerfilePath }}'
        buildContext: '$(Build.SourcesDirectory)/src'
        repository: '${{ variables.repositoryName }}'
-       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
+       dockerRegistryServiceConnection: 'tmp - sandbox1927 - acr'
 
    # Docker Build and Push (Master Only)
    - template: /templates/pipelines/dockerbuild-preservation.yml@templates
@@ -75,7 +75,7 @@ stages:
        dockerfilePath: '${{ variables.dockerfilePath }}'
        buildContext: '$(Build.SourcesDirectory)/src'
        repository: '${{ variables.repositoryName }}'
-       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
+       dockerRegistryServiceConnection: 'tmp - sandbox1927 - acr'
 
 # Dev deploy stage
 - stage: DeployDev
