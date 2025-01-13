@@ -61,11 +61,3 @@ spec:
         limits:
           memory: '128Mi'
           cpu: '100m'
-
-  #--------------------------------
-  # External docker image registry
-  #--------------------------------
-  privateImageHubs:
-    procosys.azurecr.io:
-      username: 9d3898e4-730f-4fb5-8ddf-a5de51537896
-      email: arbje@equinor.com
