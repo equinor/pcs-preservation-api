@@ -27,6 +27,7 @@ spec:
         ASPNETCORE_ENVIRONMENT: 'Development'
         UseAzureAppConfiguration: 'true'
         LEADERELECTOR_SERVICE: http://leader-elector:3003
+        AppConfiguration__BaseAddress: https://tmp-pres-poc-config.azconfig.io
       monitoring: false
       resources:
         requests:
