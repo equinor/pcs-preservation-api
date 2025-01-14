@@ -16,8 +16,6 @@ spec:
     - name: http
       port: 5000
     publicPort: http
-    secrets:
-    - CONNECTIONSTRINGS__APPCONFIG
     environmentConfig:
     # Development environment
     - environment: dev
