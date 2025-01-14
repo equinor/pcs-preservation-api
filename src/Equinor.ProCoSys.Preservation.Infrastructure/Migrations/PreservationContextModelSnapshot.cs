@@ -17,7 +17,7 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -114,6 +114,9 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -134,6 +137,8 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
                         .HasDatabaseName("IX_Journeys_Plant_ASC");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Plant"), new[] { "CreatedAtUtc", "IsVoided", "ModifiedAtUtc", "Title" });
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Journeys");
                 });
@@ -464,7 +469,8 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
 
                     b.Property<string>("FieldType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<int?>("FieldValueAttachmentId")
                         .HasColumnType("int");
@@ -1381,7 +1387,8 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
 
                     b.Property<string>("AttachmentType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("BlobPath")
                         .IsRequired()
@@ -1674,6 +1681,12 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ModifiedById")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Equinor.ProCoSys.Preservation.Domain.AggregateModels.ProjectAggregate.Project", "Project")
+                        .WithMany("Journeys")
+                        .HasForeignKey("ProjectId");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Equinor.ProCoSys.Preservation.Domain.AggregateModels.JourneyAggregate.Step", b =>
@@ -2066,6 +2079,8 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Migrations
 
             modelBuilder.Entity("Equinor.ProCoSys.Preservation.Domain.AggregateModels.ProjectAggregate.Project", b =>
                 {
+                    b.Navigation("Journeys");
+
                     b.Navigation("Tags");
                 });
 

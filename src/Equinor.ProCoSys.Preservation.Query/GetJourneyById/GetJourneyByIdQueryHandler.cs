@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Equinor.ProCoSys.Common.Misc;
 using Equinor.ProCoSys.Common;
+using Equinor.ProCoSys.Common.Misc;
 using Equinor.ProCoSys.Preservation.Domain.AggregateModels.JourneyAggregate;
 using Equinor.ProCoSys.Preservation.Domain.AggregateModels.ModeAggregate;
 using Equinor.ProCoSys.Preservation.Domain.AggregateModels.ProjectAggregate;
@@ -23,7 +23,7 @@ namespace Equinor.ProCoSys.Preservation.Query.GetJourneyById
 
         public async Task<Result<JourneyDetailsDto>> Handle(GetJourneyByIdQuery request, CancellationToken cancellationToken)
         {
-            var journey = await (from j in _context.QuerySet<Journey>().Include(j => j.Steps)
+            var journey = await (from j in _context.QuerySet<Journey>().Include(j => j.Steps).Include(j => j.Project)
                 where j.Id == request.Id
                 select j).SingleOrDefaultAsync(cancellationToken);
             if (journey == null)
@@ -68,6 +68,7 @@ namespace Equinor.ProCoSys.Preservation.Query.GetJourneyById
                             step.RowVersion.ConvertToString()
                         )
                     ),
+                journey.Project != null ? new JourneyDetailsDto.JourneyProjectDetailsDto(journey.Project.Id, journey.Project.Name, journey.Project.Description): null,
                 journey.RowVersion.ConvertToString());
             return new SuccessResult<JourneyDetailsDto>(journeyDto);
         }

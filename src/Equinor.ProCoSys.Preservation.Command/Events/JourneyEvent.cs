@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using Equinor.ProCoSys.Preservation.Command.Events.EntityNames;
+using Equinor.ProCoSys.Preservation.Domain.AggregateModels.ProjectAggregate;
 using Equinor.ProCoSys.Preservation.MessageContracts;
 
 namespace Equinor.ProCoSys.Preservation.Command.Events;
@@ -21,4 +22,5 @@ public class JourneyEvent : IJourneyEventV1
     public Guid CreatedByGuid { get; init; }
     public DateTime? ModifiedAtUtc { get; init; }
     public Guid? ModifiedByGuid { get; init; }
+    public Project? Project { get; init; }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Equinor.ProCoSys.Common;
 using Equinor.ProCoSys.Preservation.Command.JourneyCommands.CreateJourney;
 using Equinor.ProCoSys.Preservation.Command.JourneyCommands.CreateStep;
 using Equinor.ProCoSys.Preservation.Command.JourneyCommands.DeleteJourney;
@@ -13,7 +14,6 @@ using Equinor.ProCoSys.Preservation.Command.JourneyCommands.UpdateJourney;
 using Equinor.ProCoSys.Preservation.Command.JourneyCommands.UpdateStep;
 using Equinor.ProCoSys.Preservation.Command.JourneyCommands.VoidJourney;
 using Equinor.ProCoSys.Preservation.Command.JourneyCommands.VoidStep;
-using Equinor.ProCoSys.Common;
 using Equinor.ProCoSys.Preservation.Query.GetAllJourneys;
 using Equinor.ProCoSys.Preservation.Query.GetJourneyById;
 using Equinor.ProCoSys.Preservation.WebApi.Middleware;
@@ -38,9 +38,10 @@ namespace Equinor.ProCoSys.Preservation.WebApi.Controllers.Journeys
             [FromHeader(Name = CurrentPlantMiddleware.PlantHeader)]
             [Required]
             string plant,
-            [FromQuery] bool includeVoided = false)
+            [FromQuery] bool includeVoided = false,
+            [FromQuery] string projectName = null)
         {
-            var result = await _mediator.Send(new GetAllJourneysQuery(includeVoided));
+            var result = await _mediator.Send(new GetAllJourneysQuery(includeVoided, projectName));
             return this.FromResult(result);
         }
 
@@ -79,7 +80,7 @@ namespace Equinor.ProCoSys.Preservation.WebApi.Controllers.Journeys
             [FromRoute] int id,
             [FromBody] UpdateJourneyDto dto)
         {
-            var result = await _mediator.Send(new UpdateJourneyCommand(id, dto.Title, dto.RowVersion));
+            var result = await _mediator.Send(new UpdateJourneyCommand(id, dto.Title, dto.RowVersion, dto.ProjectName));
             return this.FromResult(result);
         }
 

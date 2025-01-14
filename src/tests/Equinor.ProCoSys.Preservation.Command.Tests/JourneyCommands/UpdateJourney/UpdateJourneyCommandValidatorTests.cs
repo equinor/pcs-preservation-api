@@ -24,7 +24,7 @@ namespace Equinor.ProCoSys.Preservation.Command.Tests.JourneyCommands.UpdateJour
         {
             _journeyValidatorMock = new Mock<IJourneyValidator>();
             _journeyValidatorMock.Setup(r => r.ExistsAsync(_id, default)).Returns(Task.FromResult(true));
-            _command = new UpdateJourneyCommand(_id, _title, _rowVersion);
+            _command = new UpdateJourneyCommand(_id, _title, _rowVersion, null);
 
             _rowVersionValidatorMock = new Mock<IRowVersionValidator>();
             _rowVersionValidatorMock.Setup(r => r.IsValid(_rowVersion)).Returns(true);
@@ -81,7 +81,7 @@ namespace Equinor.ProCoSys.Preservation.Command.Tests.JourneyCommands.UpdateJour
         {
             const string invalidRowVersion = "String";
             
-            var command = new UpdateJourneyCommand(_id, _title, invalidRowVersion);
+            var command = new UpdateJourneyCommand(_id, _title, invalidRowVersion, null);
             _rowVersionValidatorMock.Setup(r => r.IsValid(invalidRowVersion)).Returns(false);
 
             var result = await _dut.ValidateAsync(command);

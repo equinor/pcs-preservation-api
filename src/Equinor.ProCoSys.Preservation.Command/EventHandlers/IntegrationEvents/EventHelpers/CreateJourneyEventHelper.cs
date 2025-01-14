@@ -25,7 +25,8 @@ public class CreateJourneyEventHelper : ICreateEventHelper<Journey, JourneyEvent
             CreatedAtUtc = entity.CreatedAtUtc,
             CreatedByGuid = createdBy.Guid,
             ModifiedAtUtc = entity.ModifiedAtUtc,
-            ModifiedByGuid = modifiedBy?.Guid
+            ModifiedByGuid = modifiedBy?.Guid,
+            Project = entity.Project,
         };
     }
 }

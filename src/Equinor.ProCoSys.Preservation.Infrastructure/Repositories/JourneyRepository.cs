@@ -9,7 +9,7 @@ namespace Equinor.ProCoSys.Preservation.Infrastructure.Repositories
     public class JourneyRepository : RepositoryBase<Journey>, IJourneyRepository
     {
         public JourneyRepository(PreservationContext context)
-            : base(context, context.Journeys, context.Journeys.Include(j => j.Steps))
+            : base(context, context.Journeys, context.Journeys.Include(j => j.Steps).Include(j => j.Project))
         {
         }
 
