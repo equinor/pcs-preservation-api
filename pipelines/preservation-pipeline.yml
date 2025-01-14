@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - master
+      - 557-managed-identity-test
 
 resources:
   repositories:
@@ -18,7 +18,7 @@ variables:
  - template: templates/variables/procosys-global-variables.yml@templates
 
  - name: 'repositoryName'
-   value: 'preservation/api'
+   value: 'preservation-poc/api'
 
  - name: 'versionNumber'
    value: '0.000.0.'
@@ -35,32 +35,16 @@ variables:
 name: '${{ variables.versionNumber }}$(Build.BuildId)-$(Date:MMddyyyy)'
 
 stages:
-# Build stage. Docker build. If master, tag and push
+# Build stage. Docker build. If 557-managed-identity-test, tag and push
 - stage: Build
   displayName: 'Build'
   variables:
     envName: 'build'
     envGroupName: '$(globalPrefix)-$(fullAppName)-api-${{ variables.envName }}'
-    dockerRegistryServiceConnection: 'tmp - sandbox1927 - acr'
+    dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
     dockerfilePath: '$(Build.SourcesDirectory)/src/Equinor.ProCoSys.Preservation.WebApi/Dockerfile'
 
   jobs:
-   # Docker Build
-   - template: /templates/pipelines/dockerbuild-preservation.yml@templates
-     parameters:
-       deploymentName: 'docker_build'
-       dependsOn: ''
-       condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master')) 
-       env: 'pcs-${{ variables.envName }}'
-       envGroup: '${{ variables.envGroupName }}'
-       buildCommand: build
-       versionNumber: ${{ variables.versionNumber }}
-       arguments: '--build-arg FEED_ACCESSTOKEN=$(VSS_NUGET_ACCESSTOKEN)'
-       dockerfilePath: '${{ variables.dockerfilePath }}'
-       buildContext: '$(Build.SourcesDirectory)/src'
-       repository: '${{ variables.repositoryName }}'
-       dockerRegistryServiceConnection: 'tmp - sandbox1927 - acr'
-
    # Docker Build and Push (Master Only)
    - template: /templates/pipelines/dockerbuild-preservation.yml@templates
      parameters:
@@ -75,7 +59,7 @@ stages:
        dockerfilePath: '${{ variables.dockerfilePath }}'
        buildContext: '$(Build.SourcesDirectory)/src'
        repository: '${{ variables.repositoryName }}'
-       dockerRegistryServiceConnection: 'tmp - sandbox1927 - acr'
+       dockerRegistryServiceConnection: '$(dockerRegistryServiceConnectionName)'
 
 # Dev deploy stage
 - stage: DeployDev
